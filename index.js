@@ -1,18 +1,23 @@
 #!/bin/env node
-const express = require('express')
-const hotServerMiddleware = require('./hotServerMiddleware')
+const Koa = require('koa')
+const Router = require('koa-router')
+const serve = require('koa-static')
+const hotServerMiddleware = require('./hotServerMiddlewareKoa')
 
 async function main() {
-  const app = express()
+  const app = new Koa()
+  const router = new Router()
 
-  app.use('/dist', express.static('dist'))
+  router.get('/', hotServerMiddleware)
 
-  app.use(await hotServerMiddleware())
+  router.get('/dist/*', serve('.'))
 
-  app.get('*', (req, res) => {
-    res.status(404).send('Not Found')
+  router.get('*', async (ctx) => {
+    ctx.res.statusCode = 404
+    ctx.res.body = 'Not Found'
+    ctx.res.end()
   })
-
+  app.use(router.routes()).use(router.allowedMethods())
   app.listen(3456, () => console.log('http://localhost:3456'))
 }
 

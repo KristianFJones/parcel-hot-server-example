@@ -8,7 +8,8 @@ export default function Document({ appHtml }: DocumentProps) {
   return (
     <html>
       <head>
-        <title>Parcel Hot Server Example</title>
+        <title>Hello World</title>
+        <link rel='preload' href='/dist/client.js' as='script' />
       </head>
       <body>
         <div id='app' dangerouslySetInnerHTML={{ __html: appHtml }} />

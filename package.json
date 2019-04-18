@@ -9,13 +9,19 @@
     "build": "parcel build ./src/client.tsx ./src/server.tsx"
   },
   "dependencies": {
+    "@ladjs/koa-better-static": "^2.0.0",
+    "@types/koa": "^2.0.48",
     "babel-polyfill": "^6.26.0",
     "chokidar": "^2.1.5",
     "express": "^4.16.4",
+    "koa": "^2.7.0",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
     "ora": "^3.4.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "require-from-string": "^2.0.2",
+    "static-koa-router": "^1.0.3",
     "ui": "^0.2.4"
   },
   "devDependencies": {

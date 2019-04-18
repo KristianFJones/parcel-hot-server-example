@@ -1,14 +1,14 @@
-import { NextFunction, Request, Response } from 'express'
+import { Context, Middleware } from 'koa'
 import React from 'react'
-import ReactDomServer from 'react-dom/server'
+import { renderToString } from 'react-dom/server'
 import App from './App'
 import Document from './Document'
 
-export default function(req: Request, res: Response, next: NextFunction) {
-  if (req.path !== '/') {
-    return next()
+export default function(ctx: Context, next: any) {
+  if (ctx.path !== '/') {
+    next()
   }
-  const appHtml = ReactDomServer.renderToString(<App />)
-  const document = ReactDomServer.renderToString(<Document appHtml={appHtml} />)
-  res.status(200).send(document)
+  const appHtml = renderToString(<App />)
+  const document = renderToString(<Document appHtml={appHtml} />)
+  ctx.body = document
 }

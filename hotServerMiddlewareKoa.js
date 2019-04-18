@@ -16,26 +16,7 @@ async function getServerMiddleware(filename, buffer, options) {
   return defaultImport(requireFromString(content, serverFilename))
 }
 
-module.exports = async function hotServerMiddleware() {
+module.exports = async function hotServerMiddleware(a, next) {
   let serverMiddleware = await getServerMiddleware()
-  console.log(serverMiddleware)
-  chokidar
-    .watch(serverFilename, {
-      ignoreInitial: true,
-      awaitWriteFinish: { stabilityThreshold: 100 },
-    })
-    .on('all', async () => {
-      const spinner = ora('Updating Server Middleware')
-      spinner.start()
-      try {
-        serverMiddleware = await getServerMiddleware()
-      } catch (e) {
-        spinner.fail()
-        console.error(e)
-        return
-      }
-      spinner.succeed()
-    })
-
-  return (req, res, next) => serverMiddleware(req, res, next)
+  return serverMiddleware(a, next)
 }
