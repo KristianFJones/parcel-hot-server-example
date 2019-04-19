@@ -4,7 +4,7 @@ interface DocumentProps {
   appHtml: string
 }
 
-export default function Document({ appHtml }: DocumentProps) {
+export const Document = ({ appHtml }: DocumentProps) => {
   return (
     <html>
       <head>

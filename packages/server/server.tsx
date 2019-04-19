@@ -1,8 +1,8 @@
-import { Context, Middleware } from 'koa'
-import React from 'react'
+import { Context } from 'koa'
 import { renderToString } from 'react-dom/server'
-import { App } from './App'
-import Document from './Document'
+import React from 'react'
+import { App } from './pages/App'
+import { Document } from './pages/Document'
 
 export const SSR = async (ctx: Context, next: Function) => {
   if (ctx.path !== '/') await next()

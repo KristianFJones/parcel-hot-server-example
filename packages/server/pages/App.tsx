@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { Test } from './Test'
+import React from 'react'
 
 export const App = () => {
   return (
