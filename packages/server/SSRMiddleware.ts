@@ -2,35 +2,35 @@ import * as chokidar from 'chokidar'
 import { readFile as RF } from 'fs'
 import { promisify } from 'util'
 import * as Ora from 'ora'
+import { createContext } from 'vm'
+import { domainToASCII } from 'url'
 
 const readFile = promisify(RF)
-const serverFilename = '../../dist/server.js'
+const serverFilename = './server.tsx'
+const clientFilename = '../../dist/pages/client.js'
 
 async function getServerMiddleware() {
   return import(serverFilename)
 }
 
+async function getClientMiddleware() {
+  return import(clientFilename)
+}
+
 export const SSRMiddleware = async (
-  a: import('koa').Context,
+  ctx: import('koa').Context,
   next: Function,
 ) => {
   let { SSR } = await getServerMiddleware()
-  chokidar
-    .watch(serverFilename, {
-      ignoreInitial: true,
-      awaitWriteFinish: { stabilityThreshold: 100 },
-    })
-    .on('all', async () => {
-      const spinner = Ora('Updating Server Middleware')
-      spinner.start()
-      try {
-        SSR = await getServerMiddleware()
-      } catch (e) {
-        spinner.fail()
-        console.error(e)
-        return
-      }
-      spinner.succeed()
-    })
-  return SSR(a, next)
+  const htmlStream = await SSR(ctx, next)
+  ctx.respond = false
+  ctx.status = 200
+
+  htmlStream.pipe(
+    ctx.res,
+    { end: false },
+  )
+  htmlStream.on('end', () => {
+    ctx.res.end()
+  })
 }
